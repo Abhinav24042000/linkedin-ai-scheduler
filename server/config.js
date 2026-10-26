@@ -18,10 +18,10 @@ const config = {
     : '72fcf74506f8c961f6454b9e37ab660f1101275b1a9dcc03a3537401fee8a301',
   LINKEDIN_CLIENT_ID: process.env.LINKEDIN_CLIENT_ID,
   LINKEDIN_CLIENT_SECRET: process.env.LINKEDIN_CLIENT_SECRET,
-  LINKEDIN_REDIRECT_URI: process.env.LINKEDIN_REDIRECT_URI || 'http://localhost:3001/api/auth/linkedin/callback',
+  LINKEDIN_REDIRECT_URI: process.env.LINKEDIN_REDIRECT_URI || (process.env.RENDER_EXTERNAL_URL ? `${process.env.RENDER_EXTERNAL_URL}/api/auth/linkedin/callback` : 'http://localhost:3001/api/auth/linkedin/callback'),
   DB_PATH: process.env.DB_PATH || path.resolve(__dirname, 'data/linkedin-scheduler.db'),
   NODE_ENV: process.env.NODE_ENV || 'development',
-  CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:5173',
+  CLIENT_URL: process.env.CLIENT_URL || process.env.RENDER_EXTERNAL_URL || 'http://localhost:5173',
 };
 
 // Ensure ENCRYPTION_KEY format is valid (must be 64 hex characters = 32 bytes)

@@ -242,12 +242,11 @@ export default function Settings() {
               </div>
             )}
 
-            {/* Key input (shown when not configured or updating) */}
-            {(!settings.geminiKeyConfigured || showKeyInput) && (
-              <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  {showKeyInput ? 'New API Key' : 'API Key'}
-                </label>
+            {/* Key input (always visible for easy update) */}
+            <div className="mt-4 pt-4 border-t border-gray-100">
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                {settings.geminiKeyConfigured ? 'Update Gemini API Key' : 'Enter Gemini API Key'}
+              </label>
                 <div className="flex gap-2">
                   <div className="relative flex-1">
                     <input
@@ -302,9 +301,8 @@ export default function Settings() {
                   </p>
                 </div>
               </div>
-            )}
+            </div>
           </div>
-        </div>
 
         {/* LinkedIn API Requirements Section */}
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">

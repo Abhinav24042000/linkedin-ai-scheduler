@@ -101,11 +101,12 @@ ${customTopics ? `**Additional Context/Topics:** ${customTopics}` : ''}
  * @returns {Promise<string>} The generated post content
  */
 async function generatePost({ apiKey, topics, customTopics, tone, length, useHeadings, useEmojis, useHashtags, existingPosts }) {
-  if (!apiKey) {
-    throw new Error('Gemini API key is required. Please configure it in Settings.');
-  }
+  let cleanApiKey = typeof apiKey === 'string' ? apiKey.trim() : '';
+  cleanApiKey = cleanApiKey.replace(/^["']|["']$/g, '').trim();
+  cleanApiKey = cleanApiKey.replace(/^GEMINI_API_KEY\s*[:=]\s*/i, '').trim();
+  cleanApiKey = cleanApiKey.replace(/^["']|["']$/g, '').trim();
 
-  const cleanApiKey = apiKey.trim().replace(/^["']|["']$/g, '');
+  console.log(`[Gemini] Calling API with key prefix: "${cleanApiKey.substring(0, 8)}...", length: ${cleanApiKey.length}`);
 
   const systemPrompt = buildSystemPrompt({ topics, customTopics, tone, length, useHeadings, useEmojis, useHashtags, existingPosts });
 

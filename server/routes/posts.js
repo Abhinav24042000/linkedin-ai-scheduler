@@ -30,11 +30,27 @@ router.post('/generate', async (req, res) => {
     ).get(req.user.id);
 
     let apiKey = null;
+    let keySource = 'none';
+
     if (settings && settings.gemini_api_key_encrypted) {
-      apiKey = decrypt(settings.gemini_api_key_encrypted);
-    } else if (process.env.GEMINI_API_KEY) {
-      apiKey = process.env.GEMINI_API_KEY;
+      try {
+        apiKey = decrypt(settings.gemini_api_key_encrypted);
+        keySource = 'database settings';
+      } catch (decryptErr) {
+        console.warn('[Posts] Failed to decrypt database key:', decryptErr.message);
+      }
     }
+
+    if ((!apiKey || apiKey.trim().length === 0) && process.env.GEMINI_API_KEY) {
+      apiKey = process.env.GEMINI_API_KEY;
+      keySource = 'environment variable';
+    }
+
+    if (apiKey) {
+      apiKey = apiKey.replace(/^GEMINI_API_KEY\s*[:=]\s*/i, '').trim().replace(/^["']|["']$/g, '');
+    }
+
+    console.log(`[Posts] Loaded API key from: ${keySource}, prefix: ${apiKey ? apiKey.substring(0, 6) + '...' : 'null'}`);
 
     if (!apiKey) {
       return res.status(400).json({

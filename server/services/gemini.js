@@ -105,6 +105,8 @@ async function generatePost({ apiKey, topics, customTopics, tone, length, useHea
     throw new Error('Gemini API key is required. Please configure it in Settings.');
   }
 
+  const cleanApiKey = apiKey.trim().replace(/^["']|["']$/g, '');
+
   const systemPrompt = buildSystemPrompt({ topics, customTopics, tone, length, useHeadings, useEmojis, useHashtags, existingPosts });
 
   const requestBody = {
@@ -147,7 +149,7 @@ async function generatePost({ apiKey, topics, customTopics, tone, length, useHea
 
   for (const model of FALLBACK_MODELS) {
     try {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(cleanApiKey)}`;
 
       const response = await fetch(url, {
         method: 'POST',

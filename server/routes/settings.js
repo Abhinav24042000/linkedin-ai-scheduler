@@ -82,7 +82,8 @@ router.put('/gemini-key', (req, res) => {
       });
     }
 
-    const encryptedKey = encrypt(apiKey.trim());
+    const cleanKey = apiKey.trim().replace(/^["']|["']$/g, '');
+    const encryptedKey = encrypt(cleanKey);
 
     // Upsert: insert or update the settings record
     const existing = db.prepare('SELECT id FROM settings WHERE user_id = ?').get(req.user.id);
